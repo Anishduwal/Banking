@@ -82,7 +82,7 @@ namespace Campaign.Controllers
                         ViewBag.Error = "Password doesnot match";
                         return View();
                     }
-                    var data = _accountRepo.CreateAccount(model);
+                    var data = _accountRepo.CreateAdmin(model);
                 }
             }
             catch (Exception ex)

@@ -24,12 +24,9 @@ namespace Banking.Controllers
 
         public IActionResult Index()
         {
-            var Username = HttpContext.Session.GetString("username");
-            string Id = HttpContext.Session.GetString("Id");
             List<AccountDetailsModel> data = _accountRepo.GetAccountDetails();
             //var data = _accountRepo.FindAccount(Convert.ToInt32(Id));
 
-            ViewBag.name = Username;
             return View(data);
         }
         public IActionResult SearchAccount()
@@ -40,7 +37,7 @@ namespace Banking.Controllers
         public IActionResult SearchAccount(string AccountNumber)
         {
             AccountDetailsModel data = _accountRepo.GetAccountInformation(AccountNumber);
-            if(data == null)
+            if (data == null)
             {
                 ViewBag.Error = "No results found";
                 return View();
@@ -51,7 +48,7 @@ namespace Banking.Controllers
         {
             return View(data);
         }
- 
+
         public IActionResult Deposit([FromBody] TransactionDetailsModel model)
         {
             AccountDetailsModel data = _accountRepo.GetAccountInformation(model.AccountNumber);
@@ -78,6 +75,19 @@ namespace Banking.Controllers
             //    data.Amount -= model.TransactionAmount;
             //}
             return RedirectToAction("SearchAccount");
+        }
+        public IActionResult AddAccount()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddAccount(AccountDetailsModel model)
+        {
+            model.CreatedDate = DateTime.Now;
+            model.IsActive = true;
+            var result = _accountRepo.CreateAccount(model);
+            List<AccountDetailsModel> data = _accountRepo.GetAccountDetails();
+            return View("Index", data);
         }
     }
 }

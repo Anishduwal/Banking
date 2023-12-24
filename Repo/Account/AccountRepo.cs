@@ -13,7 +13,7 @@ namespace Banking.Repo.Account
         {
             _context = context;
         }
-        public UserDetailsModel CreateAccount(UserDetailsModel model)
+        public UserDetailsModel CreateAdmin(UserDetailsModel model)
         {
             UserDetailsModel obj = new UserDetailsModel();
             var param = new DynamicParameters();
@@ -91,6 +91,27 @@ namespace Banking.Repo.Account
                                 commandType: CommandType.StoredProcedure
                             );
                 return result;
+            }
+        }
+        public AccountDetailsModel CreateAccount(AccountDetailsModel model)
+        {
+            AccountDetailsModel obj = new AccountDetailsModel();
+            var param = new DynamicParameters();
+            param.Add("@Flag", "Insert");
+            param.Add("@Id", model.Id);
+            param.Add("@AccountHolder", model.AccountHolder);
+            param.Add("@AccountNumber", model.AccountNumber);
+            param.Add("@Email", model.Email);
+            param.Add("@PhoneNumber", model.PhoneNumber);
+            param.Add("@CreatedDate", model.CreatedDate);
+            param.Add("@IsActive", model.IsActive);
+            using (var connection = _context.CreateConnection())
+            {
+                obj = connection.QueryFirstOrDefault<AccountDetailsModel>(sql: "[dbo].[sproc_add_account]", param: param, commandType: CommandType.StoredProcedure);
+                return new AccountDetailsModel
+                {
+                    Id = obj.Id
+                };
             }
         }
 
