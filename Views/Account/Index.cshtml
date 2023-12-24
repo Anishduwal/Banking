@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LoginLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="login100-pic js-tilt" data-tilt>
+                    <img src="~/images/img-01.png" alt="IMG">
+                </div>
+                <form action="@Url.Action("Index", "Account")" method="post" enctype="multipart/form-data" class="login100-form validate-form">
+                    <span class="login100-form-title">
+                        Organization Login
+                    </span>
+                    <span class="fa alert-danger">@ViewBag.Error</span>
+                    <span class="fa alert-success">@ViewBag.Message</span>
+                    <div class="wrap-input100 validate-input" data-validate="Username is required">
+                        <input class="input100" type="text" name="UserName" placeholder="Username">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Password is required">
+                        <input class="input100" type="password" name="Password" placeholder="Password">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button type="submit" class="login100-form-btn">
+                            Login
+                        </button>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <a href="@Url.Action("CreateAccount","Account")"><button type="button" class="login100-form-btn">Register</button></a>
+
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

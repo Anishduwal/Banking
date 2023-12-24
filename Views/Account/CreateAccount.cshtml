@@ -1,0 +1,43 @@
+﻿@model Banking.Models.UserDetailsModel
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="pcoded-wrapper">
+    <div class="pcoded-content">
+        <a href="@Url.Action("Index" , "Account")"><i class="fa fa-backward"></i>&nbsp;<button type="button" class="btn btn-outline-primary">Back</button> </a>
+        <div class="pcoded-inner-content">
+            <form action="@Url.Action("CreateAccount", "Account")" method="post" enctype="multipart/form-data">
+                <ul>
+                    @if (ViewBag.Error is not null)
+                    {
+                        <span class="text-danger">@ViewBag.Error</span>
+                    }
+                </ul>
+                <div class="row">
+
+                    <div class="col-sm-6 mb-3">
+                        <label for="UserName">User Name</label>
+                        <input asp-for="Username" class="form-control"></input>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="password">Password<span style="color:firebrick">*</span></label>
+                        <input asp-for="Password" type="password" class="form-control">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label for="ConfirmPassword">Confirm Password<span style="color:firebrick">*</span></label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control">
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-primary">Add Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

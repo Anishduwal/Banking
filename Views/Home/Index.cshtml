@@ -1,0 +1,180 @@
+﻿@model IEnumerable<Banking.Models.AccountDetailsModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 60%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #ff0000;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        margin-left: 700px;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+<div class="pcoded-wrapper">
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <table id="transactionTable" class="display">
+                <thead>
+                    <tr>
+                        <th>S.N</th>
+                        <th>Account Holder</th>
+                        <th>Account Number</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Created Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable">
+                    @{
+                        var i = 1;
+                    }
+                    @foreach(var item in Model)
+                    {
+
+                        <tr>
+                            <td>@(i++)</td>
+                            <td>@item.AccountHolder</td>
+                            <td>@item.AccountNumber</td>
+                            <td>@item.Email</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.CreatedDate</td>
+                            <td>
+                                <a href="#" id="myBtn_@i" class="view">View</a><br>
+                                <a href="#" id="balance_@i" class="view">Balance</a>
+@*                                <a href="@Url.Action("UpdateOrganizationEvent","Organization",new {Id=organization.Id })"></i>Deposit</a><br>
+                                <a href="@Url.Action("DeleteOrganizationEvent","Organization",new {Id=organization.Id })" class="text-danger">Withdraw</a>*@
+                            </td>
+                        </tr>
+                        <!-- The Modal -->
+                        <div id="myModal_@i" class="modal">
+
+                            <!-- Modal content -->
+                            <div class="modal-content border-bottom-info">
+                                <span class="close" id="close_@i">&times;</span>
+                                <p><b>Account Id:<b id="id_@i" value="@item.Id">@item.Id</b></b></p>
+                                <p><b>Account Number: @item.AccountNumber</b></p>
+                                <p><b>Account Name: @item.AccountHolder</b></p>
+                                <p><b>Phone Number: @item.PhoneNumber</b></p>
+                                <p>
+                                    <label for="Amount">Transaction Amount <span style="color:firebrick">*</span></label>
+                                    <input type="text" class="form-control" id="amount">
+                                </p>
+                                <p><button type="button" value="withdraw" class="withdraw">Withdraw</p>
+                                <p><button type="button" value="deposit" class="deposit">Deposit</p>
+                            </div>
+
+                        </div>
+                        <!-- The Modal -->
+                        <div id="myModal_@i" class="modal">
+
+                            <!-- Modal content -->
+                            <div class="modal-content border-bottom-info">
+                                <span class="close" id="close_@i">&times;</span>
+                                <p><b>Account Number: @item.AccountNumber</b></p>
+                                <p><b>Account Name: @item.AccountHolder</b></p>
+                                <p><b>Phone Number: @item.PhoneNumber</b></p>
+                            </div>
+
+                        </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="~/js/account.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#transactionTable').DataTable();
+        });
+    </script>
+    <script>
+        var value = "";
+        $("#myTable tr td a.view").click(function (e) {
+            debugger;
+            var data = e.currentTarget.id.split("myBtn_");
+            value = data[1];
+
+            var modal = document.getElementById("myModal_" + value + "");
+            $("#myModal_" + value + "").css("display", "block");
+            var btn = document.getElementById("myBtn_" + value + "");
+            var span = document.getElementById("close_" + value + "");
+
+            btn.onclick = function () {
+                debugger;
+                modal.style.display = "block";
+            }
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+        $(".deposit").click(function () {
+            debugger;
+            String amount = $("#amount").val();
+            String id = document.getElementById("id_" + value + "").textContent;
+
+            $.ajax({
+                type: 'POST',
+                url: '/Home/Deposit',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: { id: id, amount : amount },
+                success: function (data) {
+                    location.reload();
+                    $('#result-container').html('POST request successful. Response: ' + JSON.stringify(data));
+                },
+                error: function (error) {
+                    $('#result-container').html('POST request failed. Error: ' + JSON.stringify(error));
+                }
+            });
+        });
+    </script>
+}

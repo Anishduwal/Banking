@@ -1,0 +1,154 @@
+﻿@model Banking.Models.AccountDetailsModel
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .account-info {
+            margin-top: 20px;
+        }
+
+        .btn-group button {
+            margin-right: 10px; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto account-info">
+                <h2>Account Information</h2>
+                <p><strong>Account Holder:</strong>@Model.AccountHolder</p>
+                <p><strong>Account Number:</strong>@Model.AccountNumber</p>
+                <p><strong>Email:</strong>@Model.Email</p>
+
+                <div class="btn-group" role="group" aria-label="account details">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#withdrawModal">Withdraw</button>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#depositModal">Deposit</button>
+                    <button type="button" class="btn btn-info" onclick="checkBalance()">Check Balance</button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="withdrawModalLabel">Withdraw</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="accountNumber" value="@Model.AccountNumber" />
+                                <div class="col-sm-6 mb-3">
+                                    <label for="Amount">Withdraw Amount <span style="color:firebrick">*</span></label>
+                                    <input id="withdrawAmount" type="number" class="form-control">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="saveChangesBtn">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="depositModalLabel">Deposit</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="accountNumber" value="@Model.AccountNumber" />
+                                <div class="col-sm-6 mb-3">
+                                    <label for="Amount">Deposit Amount <span style="color:firebrick">*</span></label>
+                                    <input id="depositAmount" type="number" class="form-control">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="saveChangesBtn1">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function withdraw() {
+            alert('Withdrawal function to be implemented.');
+        }
+
+        function deposit() {
+            alert('Deposit function to be implemented.');
+        }
+
+        function checkBalance() {
+            alert('Check Balance function to be implemented.');
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#saveChangesBtn").click(function () {
+                debugger;
+                var amount = $("#withdrawAmount").val();
+                var accountNumber = $("#accountNumber").val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/Withdraw',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify({ AccountId: '@Model.Id', amount: amount, AccountNumber: accountNumber }),
+                    success: function (data) {
+                        console.log('Withdrawal successful. Response:', data);
+
+                        $('#exampleModal').modal('hide');
+                    },
+                    error: function (error) {
+                    }
+                });
+            });
+
+            $("#saveChangesBtn1").click(function () {
+                debugger;
+                var amount = $("#depositAmount").val();
+                var accountNumber = $("#accountNumber").val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/Deposit',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify({ AccountId: '@Model.Id', amount: amount, AccountNumber: accountNumber }),
+                    success: function (data) {
+                        console.log('Withdrawal successful. Response:', data);
+
+                        $('#exampleModal').modal('hide');
+                    },
+                    error: function (error) {
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
