@@ -89,5 +89,10 @@ namespace Banking.Controllers
             List<AccountDetailsModel> data = _accountRepo.GetAccountDetails();
             return View("Index", data);
         }
+        public JsonResult CheckBalance([FromBody] TransactionDetailsModel model)
+        {
+            var result = _accountRepo.CheckBalance(model);
+            return Json(result);
+        }
     }
 }

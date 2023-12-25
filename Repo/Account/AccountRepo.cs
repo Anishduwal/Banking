@@ -114,7 +114,21 @@ namespace Banking.Repo.Account
                 };
             }
         }
-
+        public TransactionDetailsModel CheckBalance(TransactionDetailsModel model)
+        {
+            TransactionDetailsModel obj = new TransactionDetailsModel();
+            var param = new DynamicParameters();
+            param.Add("@AccountNumber", model.AccountNumber);
+            using (var connection = _context.CreateConnection())
+            {
+                var result = connection.QueryFirstOrDefault<TransactionDetailsModel>(
+                                sql: "[dbo].[sproc_check_totalbalance]",
+                                param: param,
+                                commandType: CommandType.StoredProcedure
+                            );
+                return result;
+            }
+        }
     }
 
 }

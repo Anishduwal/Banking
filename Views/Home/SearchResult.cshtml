@@ -38,7 +38,7 @@
                 <div class="btn-group" role="group" aria-label="account details">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#withdrawModal">Withdraw</button>
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#depositModal">Deposit</button>
-                    <button type="button" class="btn btn-info" onclick="checkBalance()">Check Balance</button>
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#checkBalanceModal" onclick="checkBalance()">Check Balance</button>
                 </div>
                 <!-- Modal -->
                 <div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true">
@@ -84,6 +84,29 @@
                         </div>
                     </div>
                 </div>
+                <!-- Modal -->
+                <div class="modal fade" id="checkBalanceModal" tabindex="-1" aria-labelledby="checkBalanceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="checkBalanceModalLabel">Check Balance</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="accountNumber" value="@Model.AccountNumber" />
+                                <div class="col-sm-6 mb-3">
+                                    <label for="Amount">Total Credit Amount : </label> 
+                                    <input type="text" readonly id="creditblc" />
+                                    <label for="Amount">Total Debit Amount : </label>
+                                    <input type="text" readonly id="debitblc" />
+                                    <label for="Amount">Total Balance Amount : </label>
+                                    <input type="text" readonly id="checkblc" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -93,16 +116,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        function withdraw() {
-            alert('Withdrawal function to be implemented.');
-        }
-
-        function deposit() {
-            alert('Deposit function to be implemented.');
-        }
 
         function checkBalance() {
-            alert('Check Balance function to be implemented.');
+            debugger;
+            var accountNumber = $("#accountNumber").val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Home/CheckBalance',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({ AccountNumber: accountNumber }),
+                success: function (data) {
+                    $("#creditblc").val(data.totalCredit);
+                    $("#debitblc").val(data.totalDebit);
+                    $("#checkblc").val(data.currentBalance);
+                    //$('#exampleModal').modal('hide');
+                },
+                error: function (error) {
+                }
+            });
         }
     </script>
     <script>
@@ -140,7 +173,7 @@
                     dataType: 'json',
                     data: JSON.stringify({ AccountId: '@Model.Id', amount: amount, AccountNumber: accountNumber }),
                     success: function (data) {
-                        console.log('Withdrawal successful. Response:', data);
+                        console.log('Deposit successful. Response:', data);
 
                         $('#exampleModal').modal('hide');
                     },

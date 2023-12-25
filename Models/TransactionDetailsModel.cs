@@ -14,5 +14,8 @@ namespace Banking.Models
         public DateTime TransactionDate { get; set; }
         public string? Remarks { get; set; }
         public decimal amount { get; set; }
+        public decimal CurrentBalance { get; set; }
+        public decimal TotalDebit { get; set; }
+        public decimal TotalCredit { get; set; }
     }
 }
