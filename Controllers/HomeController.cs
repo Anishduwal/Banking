@@ -54,7 +54,7 @@ namespace Banking.Controllers
             AccountDetailsModel data = _accountRepo.GetAccountInformation(model.AccountNumber);
             model.TransactionDate = DateTime.Now;
             model.TransactionAmount = model.amount;
-            model.TransactionType = "Credit";
+            model.TransactionType = "Debit";
             TransactionDetailsModel result = _transactionRepo.AddTransaction(model);
             return RedirectToAction("SearchAccount");
         }
@@ -63,7 +63,7 @@ namespace Banking.Controllers
             AccountDetailsModel data = _accountRepo.GetAccountInformation(model.AccountNumber);
             model.TransactionDate = DateTime.Now;
             model.TransactionAmount = model.amount;
-            model.TransactionType = "Debit";
+            model.TransactionType = "Credit";
             TransactionDetailsModel result = _transactionRepo.AddTransaction(model);
 
             //if (model.TransactionAmount > data.Amount)
