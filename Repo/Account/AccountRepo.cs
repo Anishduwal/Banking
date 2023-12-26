@@ -114,11 +114,11 @@ namespace Banking.Repo.Account
                 };
             }
         }
-        public TransactionDetailsModel CheckBalance(TransactionDetailsModel model)
+        public TransactionDetailsModel CheckBalance(string AccountNumber)
         {
             TransactionDetailsModel obj = new TransactionDetailsModel();
             var param = new DynamicParameters();
-            param.Add("@AccountNumber", model.AccountNumber);
+            param.Add("@AccountNumber", AccountNumber);
             using (var connection = _context.CreateConnection())
             {
                 var result = connection.QueryFirstOrDefault<TransactionDetailsModel>(

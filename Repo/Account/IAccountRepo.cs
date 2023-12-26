@@ -10,7 +10,7 @@ namespace Banking.Repo.Account
         public List<AccountDetailsModel> GetAccountDetails();
         public AccountDetailsModel GetAccountInformation(string AccountNumber);
         public AccountDetailsModel CreateAccount(AccountDetailsModel model);
-        public TransactionDetailsModel CheckBalance(TransactionDetailsModel model);
+        public TransactionDetailsModel CheckBalance(string AccountNumber);
 
     }
 }

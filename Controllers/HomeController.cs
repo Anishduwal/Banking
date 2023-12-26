@@ -49,32 +49,36 @@ namespace Banking.Controllers
             return View(data);
         }
 
-        public IActionResult Deposit([FromBody] TransactionDetailsModel model)
-        {
-            AccountDetailsModel data = _accountRepo.GetAccountInformation(model.AccountNumber);
-            model.TransactionDate = DateTime.Now;
-            model.TransactionAmount = model.amount;
-            model.TransactionType = "Debit";
-            TransactionDetailsModel result = _transactionRepo.AddTransaction(model);
-            return RedirectToAction("SearchAccount");
-        }
-        public IActionResult Withdraw([FromBody] TransactionDetailsModel model)
+        public JsonResult Deposit([FromBody] TransactionDetailsModel model)
         {
             AccountDetailsModel data = _accountRepo.GetAccountInformation(model.AccountNumber);
             model.TransactionDate = DateTime.Now;
             model.TransactionAmount = model.amount;
             model.TransactionType = "Credit";
             TransactionDetailsModel result = _transactionRepo.AddTransaction(model);
+            ViewBag.Success = "Deposited successful.";
+            return Json(new { status = true, message = ViewBag.Success });
+        }
+        public JsonResult Withdraw([FromBody] TransactionDetailsModel model)
+        {
+            AccountDetailsModel data = _accountRepo.GetAccountInformation(model.AccountNumber);
+            model.TransactionDate = DateTime.Now;
+            model.TransactionAmount = model.amount;
+            model.TransactionType = "Debit";
+            var balance = _accountRepo.CheckBalance(model.AccountNumber);
 
-            //if (model.TransactionAmount > data.Amount)
-            //{
-            //    ViewBag.Error = "Cannot send more amount than actual amount";
-            //}
-            //else
-            //{
-            //    data.Amount -= model.TransactionAmount;
-            //}
-            return RedirectToAction("SearchAccount");
+
+            if (balance.CurrentBalance < model.TransactionAmount)
+            {
+                ViewBag.Error = "Cannot withdraw amount greater than actual amount";
+                return Json(new { status = false, message = ViewBag.Error });
+            }
+            else
+            {
+                TransactionDetailsModel result = _transactionRepo.AddTransaction(model);
+                ViewBag.Success = "Withdraw successful.";
+                return Json(new { status = true, message = ViewBag.Success });
+            }
         }
         public IActionResult AddAccount()
         {
@@ -91,7 +95,7 @@ namespace Banking.Controllers
         }
         public JsonResult CheckBalance([FromBody] TransactionDetailsModel model)
         {
-            var result = _accountRepo.CheckBalance(model);
+            var result = _accountRepo.CheckBalance(model.AccountNumber);
             return Json(result);
         }
     }
